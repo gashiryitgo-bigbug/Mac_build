@@ -1,0 +1,24 @@
+name: Build macOS DMG
+on: [push] # 코드를 올릴 때마다 자동으로 빌드
+
+jobs:
+  build:
+    runs-on: macos-latest  # 👈 핵심: 여기서 애플 컴퓨터(맥)를 빌려옵니다.
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: { python-version: '3.10' }
+      - name: Install dependencies
+        run: pip install pyinstaller
+      - name: Build with PyInstaller
+        run: pyinstaller --noconfirm --onefile --windowed copycut_mac.py
+      - name: Create DMG
+        run: |
+          # 여기서 dmgbuild 같은 툴을 사용해 .app을 .dmg로 묶습니다.
+          # 예: brew install create-dmg && create-dmg output.dmg dist/
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: CopyCut_macOS
+          path: output.dmg  # 👈 빌드가 끝나면 여기로 결과물을 보내줍니다.
