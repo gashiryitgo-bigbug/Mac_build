@@ -1,20 +1,21 @@
 name: Build macOS DMG
-on: [push] # 코드를 푸시할 때마다 자동으로 실행
+on: [push]
 
 jobs:
   build:
-    runs-on: macos-latest # 애플 클라우드 컴퓨터 빌리기
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4  # v3를 v4로 변경
       - name: Set up Python
-        uses: actions/setup-python@v4
-        with: { python-version: '3.10' }
+        uses: actions/setup-python@v5 # v4를 v5로 변경 (최신 권장 버전)
+        with: 
+          python-version: '3.10'
       - name: Install dependencies
         run: pip install pyinstaller
       - name: Build with PyInstaller
         run: pyinstaller --noconfirm --onefile --windowed copycut_mac.py
       - name: Upload Build Result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # v3를 v4로 변경
         with:
           name: CopyCut_macOS
-          path: dist/copycut_mac # 빌드된 프로그램 경로
+          path: dist/copycut_mac
