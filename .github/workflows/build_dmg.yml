@@ -6,19 +6,26 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with: 
           python-version: '3.10'
+          
       - name: Install dependencies
-        run: pip install pyinstaller
+        run: |
+          pip install pyinstaller
+          pip install pyperclip pystray Pillow pynput
+          
       - name: Build APP with PyInstaller
         # --windowed가 핵심입니다. 맥에서 더블클릭 가능한 .app 구조로 만듭니다.
         run: pyinstaller --noconfirm --windowed --name="CopyCut" copycut_mac.py
+        
       - name: Create DMG using hdiutil
         # 만들어진 .app을 맥 기본 도구인 hdiutil로 깔끔하게 .dmg로 묶어줍니다.
         run: |
           hdiutil create -volname "CopyCut" -srcfolder dist/CopyCut.app -ov -format UDZO dist/CopyCut.dmg
+          
       - name: Upload Build Result
         uses: actions/upload-artifact@v4
         with:
